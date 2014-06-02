@@ -11,11 +11,10 @@ This script enables you to use PySide with Houdini. Main differences from defaul
   
   - automaticly apply Houdini-style ui design
 
+  - implemented 3 methods of execute widgets. For use it, just inherit your widget from rule class.
 
-See hqt_example.py for details.
 
-
-Install:
+### Install:
 
   - Install PySide to default Python library or to Houdini python library
 
@@ -23,6 +22,9 @@ Install:
 
 $HFS\python27\lib\site-packages\hqt.py
 
-  - import hqt
-  - help(hqt)
+<pre><code>import hqt
+help(hqt)</code></pre>
+
+See hqt_example.py for details.
+
 
