@@ -11,9 +11,11 @@ This script enables you to use PySide with Houdini. Main differences from defaul
   
   - automaticly apply Houdini-style ui design
 
-  - implemented 3 methods of execute widgets. For use it, just inherit your widget from correct class.
-
-
+  - implemented 3 different modes. It is not required other functions , rather your widget inherits from one of following classes :
+    - widget: a simple window opening . Works if the widget is created from QWidget or QMainWindow. Main function showUi returns a pointer to widget object.
+    - dialog: opens the window blocks Houdinis window. To do this you need to create a widget that inherits from QDialog. showUi returns result of the dialogue (bool) and a pointer to the dialogue object.
+    - menu: If the widget is inherited from QMenu, the menu will open at the current cursor position . showUi returns a pointer to the selected QAction
+        
 ### Install:
 
   - Install PySide to default Python library or to Houdini python library
