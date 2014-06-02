@@ -11,7 +11,7 @@ This script enables you to use PySide with Houdini. Main differences from defaul
   
   - automaticly apply Houdini-style ui design
 
-  - implemented 3 methods of execute widgets. For use it, just inherit your widget from rule class.
+  - implemented 3 methods of execute widgets. For use it, just inherit your widget from correct class.
 
 
 ### Install:
