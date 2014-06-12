@@ -868,4 +868,11 @@ QSpinBox::down-button, QDoubleSpinBox::down-button  {
     image: url(:/spin_down.png);
 }
 
-'''
+
+QPlainTextEdit, QTextEdit {
+    background: #000;
+    color: white;
+}
+QTextBrowser {
+   background-color:#3a3a3a;
+}'''
