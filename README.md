@@ -4,7 +4,7 @@ PyQt\PySide helper for Houdini
 ![alt tag](http://paulwinex.ru/files/download/hqtScreen.jpg)
 
 
-[paulpinex.ru](http://paulwinex.ru)
+[paulwinex.ru](http://paulwinex.ru)
 
 This script enables you to use PySide or PyQt4 with Houdini. Main differences from default pyqt_houdini.py are:
 
