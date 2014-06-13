@@ -1,4 +1,4 @@
-PySide helper for Houdini
+PyQt\PySide helper for Houdini
 --------------------------
 
 ![alt tag](http://paulwinex.ru/files/download/hqtScreen.jpg)
