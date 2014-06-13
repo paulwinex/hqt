@@ -25,6 +25,8 @@ This script enables you to use PySide or PyQt4 with Houdini. Main differences fr
 
 $HFS\python27\lib\site-packages\hqt.py
 
+  - Execute code:
+
 <pre><code>import hqt
 help(hqt)</code></pre>
 
