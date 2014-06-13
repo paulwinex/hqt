@@ -19,7 +19,6 @@ import sys,os
 if not sp in sys.path:
     if os.path.exists(sp):
         sys.path.append(sp)
-#################
 
 ################# IMPORTS
 qt = 0
