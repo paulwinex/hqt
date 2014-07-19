@@ -15,7 +15,7 @@ If PySide installed in different folder you mast append this path manually.
 
 ################# if PySide not installed inside houdini libs
 sp = 'C:/Python27/Lib/site-packages'
-import sys,os
+import sys, os, re
 if not sp in sys.path:
     if os.path.exists(sp):
         sys.path.append(sp)
@@ -147,7 +147,22 @@ def setIcon(widget):
         ico = QIcon(':/houdini.png')
         widget.setWindowIcon(ico)
 
-
+def getColorTheme():
+    ver = hou.hscript('version -b')[0].strip()
+    ver = '.'.join(ver.split('.')[:-1])
+    folder = 'houdini' + ver
+    home = os.getenv('HOME')
+    uiPref = os.path.join(home, folder, 'ui.pref')
+    if os.path.exists(uiPref):
+        with open(uiPref) as f:
+            for line in f:
+                #colors.scheme := "Houdini Dark";
+                if line.startswith('colors.scheme'):
+                    theme = re.findall('\"(.+)\"',line)
+                    # name, val = line.split(' := ')
+                    # theme = val.replace('"','').replace(';','')
+                    if theme:
+                        return theme[0]
 
 ############################################################
 ############  RESOURCES  ###################################
