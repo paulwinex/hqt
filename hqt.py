@@ -15,10 +15,11 @@ If PySide installed in different folder you mast append this path manually.
 
 ################# if PySide not installed inside houdini libs
 sp = 'C:/Python27/Lib/site-packages'
-import sys, os, re
+import sys,os
 if not sp in sys.path:
     if os.path.exists(sp):
         sys.path.append(sp)
+#################
 
 ################# IMPORTS
 qt = 0
@@ -147,22 +148,7 @@ def setIcon(widget):
         ico = QIcon(':/houdini.png')
         widget.setWindowIcon(ico)
 
-def getColorTheme():
-    ver = hou.hscript('version -b')[0].strip()
-    ver = '.'.join(ver.split('.')[:-1])
-    folder = 'houdini' + ver
-    home = os.getenv('HOME')
-    uiPref = os.path.join(home, folder, 'ui.pref')
-    if os.path.exists(uiPref):
-        with open(uiPref) as f:
-            for line in f:
-                #colors.scheme := "Houdini Dark";
-                if line.startswith('colors.scheme'):
-                    theme = re.findall('\"(.+)\"',line)
-                    # name, val = line.split(' := ')
-                    # theme = val.replace('"','').replace(';','')
-                    if theme:
-                        return theme[0]
+
 
 ############################################################
 ############  RESOURCES  ###################################
@@ -5732,11 +5718,9 @@ QTabBar::tab  {
     padding-right: 5px;
     padding-top: 3px;
     padding-bottom: 2px;
-    background-color:QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #4b4b4b,  stop: 1 #252525);
+    background-color:QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #313131,  stop: 1 #252525);
      
 }
-/*QTabBar::tab:hover*/
-
 
 QTabBar::tab:selected  {
     border-bottom: 0px;
