@@ -6,7 +6,7 @@ PyQt\PySide helper for Houdini
 
 [paulwinex.ru](http://paulwinex.ru)
 
-This script enables you to use PySide or PyQt4 with Houdini. Main differences from default pyqt_houdini.py are:
+This script enables you to use PySide or PyQt4 with Houdini 10-13. Main differences from default pyqt_houdini.py are:
 
   - opportunity to have several widgets open at the same time
   
