@@ -490,7 +490,6 @@ qss14ImagesLight = dict(
     rb_checked = ':/rb_checked_l.png',
     rb_checked_dis = ':/rb_checked_dis_l.png'
 )
-
 # houdini QSS Style
 def qss13():
     '''
