@@ -7,6 +7,8 @@ PyQt\PySide helper for Houdini
 
 [paulwinex.ru](http://paulwinex.ru)
 
+### Houdini 13
+
 This script enables you to use PySide or PyQt4 with Houdini. Main differences from default pyqt_houdini.py are:
 
   - opportunity to have several widgets open at the same time
@@ -17,6 +19,14 @@ This script enables you to use PySide or PyQt4 with Houdini. Main differences fr
     - widget: a simple window opening . Works if the widget is created from QWidget or QMainWindow. Main function showUi returns a pointer to widget object.
     - dialog: opens the window blocks Houdinis window. To do this you need to create a widget that inherits from QDialog. showUi returns result of the dialogue (bool) and a pointer to the dialogue object.
     - menu: If the widget is inherited from QMenu, the menu will open at the current cursor position . showUi returns a pointer to the selected QAction
+        
+### Houdini 14
+        
+This script help you to open PySide Widgets in Houdini 14
+ 
+  - Open widget as child of main Houdini Window
+  - Insert your widget as Houdini Python Panel without .pypanel file
+  - Fix default Houdini stylesheet examples
         
 ### Install:
 
