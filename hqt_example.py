@@ -1,4 +1,4 @@
-# EXAMPLES
+# EXAMPLES Houdini 13
 
 ################################# Simple widget
 # import hqt
@@ -66,3 +66,13 @@ action = hqt.showUi(myMenu)
 # get data from action object
 print action.text()
 
+
+######################################################################################## 14
+# EXAMPLES HOUDINI 14
+import hqt
+#1
+import myWidget
+# in panel
+hqt.show(myWidget.mainWindow, name='My Widget',replacePyPanel=1, hideTitleMenu=0)
+# floating
+hqt.show(myWidget.mainWindow, floating=1, position=(200,300), size=(300,400))
