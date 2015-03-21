@@ -26,7 +26,7 @@ This script help you to open PySide Widgets in Houdini 14
  
   - Open widget as child of main Houdini Window
   - Insert your widget as Houdini Python Panel without .pypanel file
-  - Fix default Houdini stylesheet examples
+  - [Fix default Houdini stylesheet examples](http://www.paulwinex.ru/hqt_release2/)
         
 ### Install:
 
