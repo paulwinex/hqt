@@ -38,9 +38,10 @@ $HFS\python27\lib\site-packages\hqt.py
 
   - Execute code:
 
-<pre><code>import hqt
-help(hqt)</code></pre>
-
+```python
+import hqt
+help(hqt)
+```
 See hqt_example.py for details.
 
 
