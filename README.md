@@ -34,7 +34,9 @@ This script help you to open PySide Widgets in Houdini 14
 
   - Copy hqt.py to PYTHONPATH or PATH. For example:
 
-$HFS\python27\lib\site-packages\hqt.py
+$HFS/python27/lib/site-packages/hqt.py
+or
+$HFS/houdini/python2.7libs/hqt.py
 
   - Execute code:
 
