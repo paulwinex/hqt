@@ -340,7 +340,7 @@ def get_h14_style(theme=None):
 def getThemeColors(theme=None):
     if not theme:
         # theme = 'Houdini Dark'
-        pref = hou.getenv('houdini_user_pref_dir')
+        pref = hou.getenv('HOUDINI_USER_PREF_DIR')
         uipref = os.path.join(pref, 'ui.pref')
         if os.path.exists(uipref ):
             with open(uipref) as f:
@@ -349,7 +349,7 @@ def getThemeColors(theme=None):
                         theme = re.findall('\"(.*)\"', l)[0]
                         break
 
-    conf = os.path.join(hou.getenv('hfs'), 'houdini', 'config')
+    conf = os.path.join(hou.getenv('HFS'), 'houdini', 'config')
     if os.path.exists(conf):
         for uif in glob.glob1(conf, "UI*"):
             path = os.path.join(conf, uif)
