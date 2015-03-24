@@ -220,10 +220,7 @@ def showUi14( cls,  name=None, floating=False, position=(), size=(), pane=None, 
     hou.pypanel.setMenuInterfaces(tuple(set(menu)))
 
     if pane is None:
-        if len(hou.ui.curDesktop().panes()) > 1:
-            pane = 1
-        else:
-            pane = 0
+        pane =  max(0,len(hou.ui.curDesktop().panes())-1)
     python_panel = None
 
     if floating:
@@ -340,7 +337,8 @@ def get_h14_style(theme=None):
 def getThemeColors(theme=None):
     if not theme:
         # theme = 'Houdini Dark'
-        pref = hou.getenv('HOUDINI_USER_PREF_DIR')
+        # pref = hou.getenv('HOUDINI_USER_PREF_DIR')
+        pref = hou.homeHoudiniDirectory()
         uipref = os.path.join(pref, 'ui.pref')
         if os.path.exists(uipref ):
             with open(uipref) as f:
