@@ -59,7 +59,7 @@ else:
 ############  GENERAL METHODS  #############################
 ############################################################
 
-def show(cls, clear=False, ontop=False, name=None, floating=False, position=(), size=(), pane=None, replacePyPanel=False, hideTitleMenu=True, dialog=False):
+def show(cls, clear=False, ontop=False, name=None, floating=False, position=(), size=(), pane=None, replacePyPanel=False, hideTitleMenu=True, dialog=False, useThisPanel=None):
     '''
     Main hqt function
 
@@ -70,12 +70,13 @@ def show(cls, clear=False, ontop=False, name=None, floating=False, position=(), 
     floating=False       : floating window or insert in tab Pane. For h14 only
     position=()          : tuple of int. Window Position. For floating window only
     size=()              : tuple of int. Window Size. For floating window only
-    pane=None  int       : number of pane to insert new tab. For h14 only
+    pane=None         : int number of pane to insert new tab. For h14 only
     replacePyPanel=False : replace exists PythonPanel or create new. For h14 only
     hideTitleMenu=True   : True = hide PythonPanel menu, False = collapse only. For h14 only
+    useThisPanel        : hou.PythonPanel, set special pythonPanel to insert widget. For h14 only
     '''
     if QT:  # h14
-        return showUi14( cls, name=name, floating=floating, position=position, size=size, pane=pane, replacePyPanel=replacePyPanel, hideTitleMenu=hideTitleMenu, dialog=dialog)
+        return showUi14( cls, name=name, floating=floating, position=position, size=size, pane=pane, replacePyPanel=replacePyPanel, hideTitleMenu=hideTitleMenu, dialog=dialog,useThisPanel=useThisPanel)
     else:   # h13
         return showUi13( cls, app=None, clear=clear, ontop=ontop, position=position, size=size, name=name)
 
@@ -199,7 +200,7 @@ def getHouWindow(): # temporary method
         if w.windowIconText():
             return w
 
-def showUi14( cls,  name=None, floating=False, position=(), size=(), pane=None, replacePyPanel=False, hideTitleMenu=True, dialog=False):
+def showUi14( cls,  name=None, floating=False, position=(), size=(), pane=None, replacePyPanel=False, hideTitleMenu=True, dialog=False, useThisPanel=None):
     """
     open pyqt ui in houdini 14
     """
@@ -221,20 +222,23 @@ def showUi14( cls,  name=None, floating=False, position=(), size=(), pane=None, 
 
     if pane is None:
         pane =  max(0,len(hou.ui.curDesktop().panes())-1)
-    python_panel = None
-
-    if floating:
-        python_panel = hou.ui.curDesktop().createFloatingPaneTab(hou.paneTabType.PythonPanel, position, size)
+    if useThisPanel:
+        python_panel = useThisPanel
     else:
-        if replacePyPanel:
-            for p in hou.ui.curDesktop().panes():
-                for t in p.tabs():
-                    if t.type() == hou.paneTabType.PythonPanel:
-                        python_panel = t.setType(hou.paneTabType.PythonPanel)
-            if not python_panel:
-                python_panel = hou.ui.curDesktop().panes()[pane].createTab(hou.paneTabType.PythonPanel)
+        python_panel = None
+
+        if floating:
+            python_panel = hou.ui.curDesktop().createFloatingPaneTab(hou.paneTabType.PythonPanel, position, size)
         else:
-            python_panel = hou.ui.curDesktop().panes()[pane].createTab(hou.paneTabType.PythonPanel)
+            if replacePyPanel:
+                for p in hou.ui.curDesktop().panes():
+                    for t in p.tabs():
+                        if t.type() == hou.paneTabType.PythonPanel:
+                            python_panel = t.setType(hou.paneTabType.PythonPanel)
+                if not python_panel:
+                    python_panel = hou.ui.curDesktop().panes()[pane].createTab(hou.paneTabType.PythonPanel)
+            else:
+                python_panel = hou.ui.curDesktop().panes()[pane].createTab(hou.paneTabType.PythonPanel)
 
     python_panel.setIsCurrentTab()
     if hideTitleMenu:
@@ -1425,8 +1429,8 @@ QToolButton
     border-radius: 4px;
     padding-top: 2px;
     padding-bottom: 2px;
-    padding-right: 2px;
-    padding-left: 2px;
+    padding-right: 3px;
+    padding-left: 3px;
     margin: 1px;
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
 				stop: 0.0 rgb(@ButtonGradHi@),
@@ -1627,14 +1631,14 @@ QTabBar::tab
 {
     padding-left: 6px;
     padding-right: 6px;
+    padding-top: 2px;
+    padding-bottom: 2px;
     height: 18px;
     margin-top: 1px;
     margin-left: -1px;
     border: 1px solid rgb(@ButtonShadowMed@);
     border-radius: 0px;
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-				stop: 0.0 rgb(@ButtonGradHi@),
-				stop: 1.0 rgb(@ButtonNonActiveGradLow@));
+    background: rgb(@ButtonNonActiveGradLow@);
 }
 
 QTabBar[webbrowser="true"]::tab
@@ -1655,7 +1659,7 @@ QTabBar[webbrowser="true"]::tab:last
 
 QTabBar::tab:selected
 {
-    border: 1px solid rgb(@ButtonShadowMed@);
+    border: 2px solid rgb(@ButtonNonActiveGradLow@);
     border-bottom: 0;
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
 				stop: 0.0 rgb(@ButtonGradHi@),
@@ -2082,13 +2086,47 @@ QComboBox QAbstractItemView:item
     color: rgb(@MenuTextSelected@);
 
 }
-
 QComboBox:on
 {
     background-color: rgb(@ButtonPressedGradHi@);
     color: rgb(@ButtonPressedText@);
 }
-
+QToolBar {
+    border: 1px solid rgb(@ProgressMeterBottomBorder@);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+				stop:0.0 rgb(@BackColor:Brightness=1.2@),
+				stop:1.0 rgb(@BackColor@));
+}
+QToolBar::handle:horizontal {
+  background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+				stop:0.0 rgb(@ButtonGradHi@),
+				stop:0.5 transparent);
+}
+QToolBar::handle:vertical {
+  background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+				stop:0.0 rgb(@ButtonGradHi@),
+				stop:1.0 transparent);
+}
+QToolBar::separator:horizontal {
+  width: 2;
+  margin: 2px;
+  background: rgb(@BackColor:Brightness=0.8@);
+}
+QToolBar::separator:vertical {
+  height: 2;
+  margin: 2px;
+  background: rgb(@BackColor:Brightness=0.8@);
+}
+QToolBar QToolButton {
+	background: transparent;
+	border: none;
+	border-radius: 0px;
+}
+QToolBar QToolButton:hover {
+	background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+				stop:0.0 rgb(@BackColor:Brightness=1.3@),
+				stop:1.0 rgb(@BackColor@));
+}
  '''
     return s
 
