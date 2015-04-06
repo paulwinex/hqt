@@ -43,7 +43,9 @@ $HFS/houdini/python2.7libs/hqt.py
 import hqt
 help(hqt)
 ```
-See hqt_example.py for details.
+
+
+See [hqt_example.py](https://github.com/paulwinex/hqt/blob/master/hqt_example.py) for details.
 
 ---------------
 #### Compare Houdini default stylesheet and hqt stylesheet
