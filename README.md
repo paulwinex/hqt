@@ -1,7 +1,6 @@
 PyQt\PySide helper for Houdini
 --------------------------
 
-![alt tag](http://paulwinex.ru/files/download/hqtScreen.jpg)
 ![alt tag](http://paulwinex.ru/files/download/hqt_example.jpg)
 
 
@@ -46,4 +45,6 @@ help(hqt)
 ```
 See hqt_example.py for details.
 
-
+![alt tag](http://www.paulwinex.ru/wp-content/uploads/2015/03/compare_1.png)
+![alt tag](http://www.paulwinex.ru/wp-content/uploads/2015/03/compare_2.png)
+![alt tag](http://www.paulwinex.ru/wp-content/uploads/2015/03/compare_3.png)
