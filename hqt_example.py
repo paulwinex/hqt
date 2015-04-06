@@ -70,6 +70,16 @@ print action.text()
 ######################################################################################## 14
 
 # EXAMPLES HOUDINI 14
+
+########## Simple Window
+import myWidget
+import hqt
+w = myWidget()
+w.setParent(hqt.getHouWindow())
+w.setStyleSheet(hqt.get_h14_style())
+w.show()
+
+######## Insert as Panel
 import hqt
 #1
 import myWidget
@@ -77,3 +87,4 @@ import myWidget
 hqt.show(myWidget.mainWindow, name='My Widget',replacePyPanel=1, hideTitleMenu=0)
 # floating
 hqt.show(myWidget.mainWindow, floating=1, position=(200,300), size=(300,400))
+
