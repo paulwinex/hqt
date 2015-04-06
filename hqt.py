@@ -208,6 +208,7 @@ def showUi14( cls,  name=None, floating=False, position=(), size=(), pane=None, 
     if dialog:
         h = getHouWindow()
         dial = cls(h)
+        dial.setStyleSheet('')
         dial.setStyleSheet(get_h14_style())
         res = dial.exec_()
         return (res, dial)
@@ -282,6 +283,7 @@ def createPanelFile(cls, name=None):
     <script><![CDATA[main = __import__('__main__')
 def createInterface():
     w = main.__dict__['{0}']()
+    w.setStyleSheet('')
     w.setStyleSheet( main.__dict__['hqt'].get_h14_style() )
     return w
 ]]></script>
