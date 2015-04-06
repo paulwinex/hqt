@@ -45,6 +45,9 @@ help(hqt)
 ```
 See hqt_example.py for details.
 
+---------------
+## Compare Houdini default stylesheet and hqt stylesheet
+
 ![alt tag](http://www.paulwinex.ru/wp-content/uploads/2015/03/compare_1.png)
 ![alt tag](http://www.paulwinex.ru/wp-content/uploads/2015/03/compare_2.png)
 ![alt tag](http://www.paulwinex.ru/wp-content/uploads/2015/03/compare_3.png)
