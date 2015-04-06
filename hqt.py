@@ -321,10 +321,12 @@ def get_h14_style(theme=None):
                         name = val
                     if name in colors:
                         c = ','.join([str( min(int(x*br*255),255) ) for x in colors[name]])
-                        l = l.replace(v, c)
                     else:
-                        pass
-                        # print 'Skip color' + name
+                        #use default
+                        print 'Color not found', name
+                        c = ','.join([str( min(int(x*br*255),255) ) for x in colors['BackColor']])
+                    l = l.replace(v, c)
+
             images = re.findall('(\$.*\$)', l)
             if images:
                 for i in images:
@@ -353,7 +355,7 @@ def getThemeColors(theme=None):
 
     conf = os.path.join(hou.getenv('HFS'), 'houdini', 'config')
     if os.path.exists(conf):
-        for uif in glob.glob1(conf, "UI*"):
+        for uif in glob.glob1(conf, "*.hcs"):
             path = os.path.join(conf, uif)
             with open(path) as f:
                 name = f.readline().split(':')[-1].strip()
@@ -361,6 +363,7 @@ def getThemeColors(theme=None):
                     reader = colorReader(path)
                     colors = reader.parse()
                     return colors
+    print 'Theme not found', conf
 
 class colorReader(object):
     '''
@@ -543,12 +546,12 @@ QMainWindow::separator:hover
 QToolTip
 {
      border: 1px solid black;
-     background-color: #eeeeee;
+     background-color: #000;
      padding: 1px;
      padding-left: 4px;
      padding-right: 4px;
      border-radius: 3px;
-     color: black;
+     color: white;
      opacity: 100;
 }
 
@@ -2126,6 +2129,11 @@ QToolBar QToolButton:hover {
 	background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
 				stop:0.0 rgb(@BackColor:Brightness=1.3@),
 				stop:1.0 rgb(@BackColor@));
+}
+QToolBar QToolButton:pressed {
+	background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+				stop:0.0 rgb(@BackColor:Brightness=0.9@),
+				stop:1.0 rgb(@BackColor:Brightness=0.6@));
 }
  '''
     return s
