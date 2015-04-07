@@ -189,7 +189,6 @@ def setIcon(widget):
         ico = QIcon(':/houdini.png')
         widget.setWindowIcon(ico)
 
-
 ############################################################
 ############  METHODS FOR HOU 14 ###########################
 ############################################################
@@ -257,7 +256,6 @@ def delPanFile(path):
     except:
         pass
 
-
 def installedInterfaces():
     res = []
     menu = hou.pypanel.menuInterfaces()
@@ -268,7 +266,6 @@ def installedInterfaces():
         except:
             pass
     return res
-
 
 def createPanelFile(cls, name=None):
     """
@@ -293,6 +290,40 @@ def createInterface():
     tmp.write(xml)
     tmp.close()
     return tmp.name
+
+class houdiniMenu(QMenu):
+    def __init__(self):
+        super(houdiniMenu, self).__init__(getHouWindow())
+        self.par = getHouWindow()
+
+    def addItem(self, name, callback, icon=None):
+        if not isinstance(name, str):
+            return False
+        if not hasattr(callback, '__call__'):
+            return False
+        act = QAction(name, self.par)
+        act.triggered.connect(callback)
+        if icon:
+            if isinstance(icon, str):
+                if os.path.exists(icon):
+                    try:
+                        icon = QIcon(icon)
+                        act.setIcon(icon)
+                    except:
+                        print 'Error create icon:', icon
+                else:
+                    try:
+                        icon = hou.ui.createQtIcon(icon)
+                        act.setIcon(icon)
+                    except:
+                        print 'Icon not found:', icon
+            elif isinstance(icon, QIcon):
+                act.setIcon(icon)
+        self.addAction(act)
+
+    def show(self, *args, **kwargs):
+        return self.exec_(QCursor.pos())
+
 
 
 ############################################################
@@ -366,6 +397,54 @@ def getThemeColors(theme=None):
                     colors = reader.parse()
                     return colors
     print 'Theme not found', conf
+
+class houdiniColorsClass(QMainWindow):
+    def __init__(self, theme=None):
+        super(houdiniColorsClass, self).__init__(getHouWindow(), Qt.WindowStaysOnTopHint)
+        # self.setWindowFlags()
+        self.centralwidget = QWidget(self)
+        self.verticalLayout = QVBoxLayout(self.centralwidget)
+        self.scrollArea = QScrollArea(self.centralwidget)
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollAreaWidgetContents = QWidget()
+        self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
+        self.widget = QWidget(self.scrollAreaWidgetContents)
+        self.verticalLayout_3 = QGridLayout(self.widget)
+
+        self.verticalLayout_2.addWidget(self.widget)
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        self.verticalLayout.addWidget(self.scrollArea)
+        self.setCentralWidget(self.centralwidget)
+        self.setStyleSheet(get_h14_style())
+        colors = getThemeColors(theme)
+        for i, name in enumerate(sorted(colors, key=lambda x:x)):
+            color = colors[name]
+            if not color:continue
+            if len(color) != 3:
+                continue
+            l = QLineEdit()
+            l.setMinimumWidth(200)
+            l.setText(name)
+            l.setReadOnly(1)
+            self.verticalLayout_3.addWidget(l, i, 0)
+            c = QLabel()
+            c.setText(str(color))
+            col = QColor()
+            if (sum(color)/3) < 0.5:
+                text = '#fff'
+            else:
+                text = '#000'
+            col.setRgbF(*color)
+            style = 'background-color: %s; color: %s;' % (col.name(), text)
+            # print style
+            c.setStyleSheet(style)
+            self.verticalLayout_3.addWidget(c, i, 1)
+
+def houdiniColors():
+    w = houdiniColorsClass()
+    w.show()
+
+
 
 class colorReader(object):
     '''
@@ -595,6 +674,7 @@ QMenu::item
 {
     background-color: #3a3a3a;
     padding: 2px 20px 2px 20px;
+    margin-left: 14px;
 }
 
 QMenu::item:selected
@@ -1328,7 +1408,7 @@ QCheckBox:disabled,QRadioButton:disabled {
 QSplitter::handle
 {
     background-color: rgb(@BackColor:Brightness=1.2@);
-    margin:4px;
+    margin:2px;
 }
 
 QSplitter::handle:horizontal
@@ -1641,9 +1721,9 @@ QTabBar::tab
     height: 18px;
     margin-top: 1px;
     margin-left: -1px;
-    border: 1px solid rgb(@ButtonShadowMed@);
+    border: 1px solid rgb(@PaneBorder@);
     border-radius: 0px;
-    background: rgb(@ButtonNonActiveGradLow@);
+    background: rgb(@PaneTabInactiveHi@);
 }
 
 QTabBar[webbrowser="true"]::tab
@@ -1664,10 +1744,10 @@ QTabBar[webbrowser="true"]::tab:last
 
 QTabBar::tab:selected
 {
-    border: 2px solid rgb(@ButtonNonActiveGradLow@);
+    border: 2px solid rgb(@PaneBorder@);
     border-bottom: 0;
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-				stop: 0.0 rgb(@ButtonGradHi@),
+				stop: 0.0 rgb(@PaneTabActiveHi@),
 				stop: 1.0 rgb(@BackColor@));
 }
 
@@ -1705,7 +1785,10 @@ QMenu
 
 QMenu::item
 {
-    padding: 4px 15px 4px 15px;
+    padding: 2px 15px 2px 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+
 }
 
 QMenuBar::item
@@ -1724,7 +1807,6 @@ QMenu::item:disabled
 {
     color: rgb(@MenuTextDisabled@);
 }
-
 QMenuBar
 {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
@@ -1732,7 +1814,6 @@ QMenuBar
 				stop: 1.0 rgb(@MenuBG:Brightness=0.85@));
     border: 1px solid rgb(@BorderLight@);
 }
-
 QMenuBar::item:pressed
 {
     background: rgb(@MenuSelectedBG@);
@@ -2104,13 +2185,23 @@ QToolBar {
 }
 QToolBar::handle:horizontal {
   background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-				stop:0.0 rgb(@ButtonGradHi@),
-				stop:0.5 transparent);
+				stop:0.0 rgb(@PaneTabShadow@),
+				stop:0.2 rgb(@BackColor:Brightness=1.6@),
+				stop:0.6 rgb(@BackColor:Brightness=1.5@),
+				stop:0.8 rgb(@BackColor@),
+				stop:0.9 rgb(@PaneTabShadow@)
+				);
+  width: 10px;
 }
 QToolBar::handle:vertical {
   background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-				stop:0.0 rgb(@ButtonGradHi@),
-				stop:1.0 transparent);
+				stop:0.0 rgb(@PaneTabShadow@),
+				stop:0.2 rgb(@BackColor:Brightness=1.6@),
+				stop:0.6 rgb(@BackColor:Brightness=1.5@),
+				stop:0.8 rgb(@BackColor@),
+				stop:0.9 rgb(@PaneTabShadow@)
+				);
+  height: 10px;
 }
 QToolBar::separator:horizontal {
   width: 2;
