@@ -1721,7 +1721,7 @@ QTabBar::tab
     height: 18px;
     margin-top: 1px;
     margin-left: -1px;
-    border: 1px solid rgb(@PaneBorder@);
+    border: 1px solid rgb(@PaneTabInactiveHi:Brightness=0.75@);
     border-radius: 0px;
     background: rgb(@PaneTabInactiveHi@);
 }
@@ -1737,14 +1737,14 @@ QTabBar[webbrowser="true"]::tab
 
 QTabBar[webbrowser="true"]::tab:last
 {
-    border-color: rgb(@BackColor@);
+    border-color: rgb(@PaneTabInactiveLow@);
     border-radius: 0px;
     background: none;
 }
 
 QTabBar::tab:selected
 {
-    border: 2px solid rgb(@PaneBorder@);
+    border: 2px solid rgb(@PaneTabInactiveLow@);
     border-bottom: 0;
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
 				stop: 0.0 rgb(@PaneTabActiveHi@),
@@ -1845,9 +1845,11 @@ QProgressBar
 QProgressBar::chunk
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-	stop:0 rgb(@ProgressMeterGradLo@),
-	stop:0.85 rgb(@ProgressMeterGradLo:Brightness=0.75@),
-	stop:1.0 rgb(@ProgressMeterGradLo:Brightness=0.65@));
+	stop:0 rgb(@ProgressMeterGradHi@),
+	stop:0.07 rgb(@ProgressMeterGradLo@),
+	stop:0.8 rgb(@ProgressMeterGradLo:Brightness=0.7@),
+	stop:0.95 rgb(@ProgressMeterGradLo:Brightness=0.65@),
+	stop:1.0 rgb(@ProgressMeterGradLo:Brightness=0.4@));
 }
 
 QScrollBar:horizontal
