@@ -1807,6 +1807,17 @@ QMenu::item:disabled
 {
     color: rgb(@MenuTextDisabled@);
 }
+
+QMenu::tearoff
+{
+    background-color: rgb(@MenuBG@);
+    border: none;
+}
+QMenu::tearoff:selected
+{
+    background-color: rgb(@MenuSelectedBG@);
+}
+
 QMenuBar
 {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
@@ -2186,20 +2197,16 @@ QToolBar {
 QToolBar::handle:horizontal {
   background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
 				stop:0.0 rgb(@PaneTabShadow@),
-				stop:0.2 rgb(@BackColor:Brightness=1.6@),
-				stop:0.6 rgb(@BackColor:Brightness=1.5@),
-				stop:0.8 rgb(@BackColor@),
-				stop:0.9 rgb(@PaneTabShadow@)
+				stop:0.2 rgb(@BackColor:Brightness=1.8@),
+				stop:0.4 transparent
 				);
   width: 10px;
 }
 QToolBar::handle:vertical {
   background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
 				stop:0.0 rgb(@PaneTabShadow@),
-				stop:0.2 rgb(@BackColor:Brightness=1.6@),
-				stop:0.6 rgb(@BackColor:Brightness=1.5@),
-				stop:0.8 rgb(@BackColor@),
-				stop:0.9 rgb(@PaneTabShadow@)
+				stop:0.2 rgb(@BackColor:Brightness=1.8@),
+				stop:0.4 transparent
 				);
   height: 10px;
 }
@@ -2231,3 +2238,23 @@ QToolBar QToolButton:pressed {
  '''
     return s
 
+# QToolBar::handle:horizontal {
+#   background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+# 				stop:0.0 rgb(@PaneTabShadow@),
+# 				stop:0.2 rgb(@BackColor:Brightness=1.6@),
+# 				stop:0.6 rgb(@BackColor:Brightness=1.5@),
+# 				stop:0.8 rgb(@BackColor@),
+# 				stop:0.9 rgb(@PaneTabShadow@)
+# 				);
+#   width: 10px;
+# }
+# QToolBar::handle:vertical {
+#   background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+# 				stop:0.0 rgb(@PaneTabShadow@),
+# 				stop:0.2 rgb(@BackColor:Brightness=1.6@),
+# 				stop:0.6 rgb(@BackColor:Brightness=1.5@),
+# 				stop:0.8 rgb(@BackColor@),
+# 				stop:0.9 rgb(@PaneTabShadow@)
+# 				);
+#   height: 10px;
+# }
