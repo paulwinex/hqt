@@ -1,4 +1,5 @@
 """
+hqt v1.15.1
 Use function "show"
 ========================================================================================
 manual:
@@ -10,7 +11,7 @@ to environment PATH. If PySide installed in different folder you mast append thi
 qt = 0
 
 import hou
-import sys, os
+import sys, os, inspect
 
 # import hqt to main
 main = __import__('__main__')
@@ -198,6 +199,7 @@ def getHouWindow(): # temporary method
     for w in app.topLevelWidgets():
         if w.windowIconText():
             return w
+houWindow = getHouWindow()
 
 def showUi14( cls,  name=None, floating=False, position=(), size=(), pane=None, replacePyPanel=False, hideTitleMenu=True, dialog=False, useThisPanel=None):
     """
@@ -218,7 +220,13 @@ def showUi14( cls,  name=None, floating=False, position=(), size=(), pane=None, 
 
     menu = installedInterfaces()
     menu.append(pypan.name())
-    hou.pypanel.setMenuInterfaces(tuple(set(menu)))
+    menu = [x for x in menu if not x == '__separator__']
+    new = []
+    for m in menu:
+        if not m in new:
+            new.append(m)
+
+    hou.pypanel.setMenuInterfaces(tuple(new))
 
     if pane is None:
         pane =  max(0,len(hou.ui.curDesktop().panes())-1)
@@ -249,6 +257,22 @@ def showUi14( cls,  name=None, floating=False, position=(), size=(), pane=None, 
     python_panel.setInterface(pypan)
 
     QTimer.singleShot(2000, lambda x=panFile:delPanFile(x))
+
+
+def showWidget(widget, tool=False):
+    if inspect.isclass(widget): #object not created
+        widget = widget()
+    widget.setParent(getHouWindow())
+    if tool:
+        widget.setWindowFlags(Qt.Tool)
+    else:
+        widget.setWindowFlags(Qt.Window)
+    # widget.setStyleSheet(hou.ui.qtStyleSheet())
+    style = get_h14_style()
+    widget.setStyleSheet('')
+    widget.setStyleSheet(style)
+    widget.show()
+    return widget
 
 def delPanFile(path):
     try:
@@ -396,7 +420,7 @@ def getThemeColors(theme=None):
                     reader = colorReader(path)
                     colors = reader.parse()
                     return colors
-    print 'Theme not found', conf
+    # print 'Theme not found', conf.replace('\\','/'), theme
 
 class houdiniColorsClass(QMainWindow):
     def __init__(self, theme=None):
@@ -790,7 +814,7 @@ QTableView::item:selected {
     color: rgb(220,220,220);
  }
 
-  QTableView QTableCornerButton::section {
+QTableView QTableCornerButton::section {
      background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #393939, stop: 1 #272727);
      border: 1px solid #191919;
      border-top-width: 0px;
@@ -1300,15 +1324,23 @@ QPlainTextEdit, QTextEdit {
     color: white;
 }
 QTextBrowser {
-   background-color:#3a3a3a;
+    background-color:#3a3a3a;
 }
 QTabBar::close-button {
-     image: url(:/tab_close.png);
-     subcontrol-position: right;
- }
+    image: url(:/tab_close.png);
+    subcontrol-position: right;
+}
 QTabBar::close-button:hover {
-     image: url(:/tab_close_hover.png);
- }'''
+    image: url(:/tab_close_hover.png);
+}
+
+QToolTip {
+    color: #ffffff;
+    background-color: #2a82da;
+    border: 1px solid white;
+}
+
+ '''
     return s
 
 # different icons for light and black themes
@@ -1511,7 +1543,7 @@ QRadioButton
 QToolButton
 {
     border: 1px solid rgb(@BorderLight@);
-    border-radius: 4px;
+    border-radius: 0px;
     padding-top: 2px;
     padding-bottom: 2px;
     padding-right: 3px;
@@ -1668,18 +1700,16 @@ QTreeView::item:selected, QListView::item:selected
     outline: none;
 }
 
-
 QHeaderView::section, QTableCornerButton::section
 {
     border: 1px solid rgb(@ListTitleShadow@);
-    border-top: 0;
+    border-top: 1;
     border-left: 0;
     padding: 4px;
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
 				stop: 0.0 rgb(@ListTitleGradHi@),
 				stop: 1.0 rgb(@ListTitleGradLow@) );
 }
-
 
 QTabWidget
 {
@@ -2237,7 +2267,7 @@ QToolBar QToolButton:pressed {
 				stop:0.0 rgb(@BackColor:Brightness=0.9@),
 				stop:1.0 rgb(@BackColor:Brightness=0.6@));
 }
- '''
+'''
     return s
 
 # QToolBar::handle:horizontal {
