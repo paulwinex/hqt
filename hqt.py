@@ -1,5 +1,5 @@
 """
-hqt v1.15.1
+hqt - QT helper for Houdini v1.3
 Use function "show"
 ========================================================================================
 manual:
@@ -63,18 +63,26 @@ else:
 def show(cls, clear=False, ontop=False, name=None, floating=False, position=(), size=(), pane=None, replacePyPanel=False, hideTitleMenu=True, dialog=False, useThisPanel=None):
     '''
     Main hqt function
-
-    cls                  : class of widget. NOT instance!
-    clear=False          : delete exists window. For h13 only
-    ontop=False          : window always on top (only floating window). For h13 only
-    name=None            : window title in h13 or tab title in h14
-    floating=False       : floating window or insert in tab Pane. For h14 only
-    position=()          : tuple of int. Window Position. For floating window only
-    size=()              : tuple of int. Window Size. For floating window only
-    pane=None         : int number of pane to insert new tab. For h14 only
-    replacePyPanel=False : replace exists PythonPanel or create new. For h14 only
-    hideTitleMenu=True   : True = hide PythonPanel menu, False = collapse only. For h14 only
-    useThisPanel        : hou.PythonPanel, set special pythonPanel to insert widget. For h14 only
+    Parameters:
+        cls                  : class of widget. NOT instance!
+        clear=False          : delete exists window. For h13 only
+        ontop=False          : window always on top (only floating window). For h13 only
+        name=None            : window title in h13 or tab title in h14
+        floating=False       : floating window or insert in tab Pane. For h14 only
+        position=()          : tuple of int. Window Position. For floating window only
+        size=()              : tuple of int. Window Size. For floating window only
+        pane=None           : int number of pane to insert new tab. For h14 only
+        replacePyPanel=False : replace exists PythonPanel or create new. For h14 only
+        hideTitleMenu=True   : True = hide PythonPanel menu, False = collapse only. For h14 only
+        useThisPanel        : hou.PythonPanel, set special pythonPanel to insert widget. For h14 only
+----------------------------------------------------------------------------------------------------------
+    Other functions:
+        hqt.houdiniColors()         # list of colors in current Houdini theme
+        hqt.applyStyle(widget)      # apply QT stile and Houdini icon for widget
+        hqt.setIcon(widget)         # set Houdini icon for widget
+        hqt.getHouWindow()          # return main Qt widget of Houdini
+        hqt.showWidget()            # Just show widget
+        hqt.get_h14_style()         # return qt stylesheet for current Houdini theme
     '''
     if QT:  # h14
         return showUi14( cls, name=name, floating=floating, position=position, size=size, pane=pane, replacePyPanel=replacePyPanel, hideTitleMenu=hideTitleMenu, dialog=dialog,useThisPanel=useThisPanel)
@@ -182,23 +190,35 @@ def clearUi(name):
                 except:
                     pass
 
-def applyStyle(widget):
-    widget.setStyleSheet(qss13())
+##################################### STYLE
+def applyStyle(widget, theme=False, h13=False):
+    widget.setStyleSheet('')
+    widget.setStyleSheet(qss13() if h13 else get_h14_style(theme))
+    setIcon(widget)
 
 def setIcon(widget):
-    if widget.windowIcon().isNull():
-        ico = QIcon(':/houdini.png')
-        widget.setWindowIcon(ico)
+    if hou.applicationVersion()[0] < 15:
+        if widget.windowIcon().isNull():
+            ico = QIcon(':/houdini.png')
+            widget.setWindowIcon(ico)
+        else:
+            ico = hou.ui.createQtIcon('DESKTOP_application')
+            widget.setWindowIcon(ico)
 
 ############################################################
 ############  METHODS FOR HOU 14 ###########################
 ############################################################
 
 def getHouWindow(): # temporary method
-    app = QApplication.instance()
-    for w in app.topLevelWidgets():
-        if w.windowIconText():
-            return w
+    # check Houdini version
+    if hou.applicationVersion()[0] < 15:
+        app = QApplication.instance()
+        for w in app.topLevelWidgets():
+            if w.windowIconText():
+                return w
+    else:
+        return hou.ui.mainQtWindow()
+
 houWindow = getHouWindow()
 
 def showUi14( cls,  name=None, floating=False, position=(), size=(), pane=None, replacePyPanel=False, hideTitleMenu=True, dialog=False, useThisPanel=None):
@@ -254,12 +274,18 @@ def showUi14( cls,  name=None, floating=False, position=(), size=(), pane=None, 
     else:
         python_panel.showToolbar(1)
         python_panel.expandToolbar(0)
-    python_panel.setInterface(pypan)
+    if hou.applicationVersion()[0] < 15:
+        python_panel.setInterface(pypan)
+    else:
+        python_panel.setActiveInterface(pypan)
 
     QTimer.singleShot(2000, lambda x=panFile:delPanFile(x))
 
 
 def showWidget(widget, tool=False):
+    """
+    Just show widget
+    """
     if inspect.isclass(widget): #object not created
         widget = widget()
     widget.setParent(getHouWindow())
@@ -268,9 +294,7 @@ def showWidget(widget, tool=False):
     else:
         widget.setWindowFlags(Qt.Window)
     # widget.setStyleSheet(hou.ui.qtStyleSheet())
-    style = get_h14_style()
-    widget.setStyleSheet('')
-    widget.setStyleSheet(style)
+    applyStyle(widget)
     widget.show()
     return widget
 
@@ -348,8 +372,6 @@ class houdiniMenu(QMenu):
     def show(self, *args, **kwargs):
         return self.exec_(QCursor.pos())
 
-
-
 ############################################################
 ############  RESOURCES  ###################################
 ############################################################
@@ -399,8 +421,6 @@ def get_h14_style(theme=None):
 
 def getThemeColors(theme=None):
     if not theme:
-        # theme = 'Houdini Dark'
-        # pref = hou.getenv('HOUDINI_USER_PREF_DIR')
         pref = hou.homeHoudiniDirectory()
         uipref = os.path.join(pref, 'ui.pref')
         if os.path.exists(uipref ):
@@ -420,7 +440,6 @@ def getThemeColors(theme=None):
                     reader = colorReader(path)
                     colors = reader.parse()
                     return colors
-    # print 'Theme not found', conf.replace('\\','/'), theme
 
 class houdiniColorsClass(QMainWindow):
     def __init__(self, theme=None):
@@ -465,10 +484,8 @@ class houdiniColorsClass(QMainWindow):
             self.verticalLayout_3.addWidget(c, i, 1)
 
 def houdiniColors():
-    w = houdiniColorsClass()
-    w.show()
-
-
+    show(houdiniColorsClass, name='Colors', hideTitleMenu=True)
+    # showUi14(houdiniColorsClass, name='Colors', floating=False)
 
 class colorReader(object):
     '''
@@ -1816,8 +1833,8 @@ QMenu
 QMenu::item
 {
     padding: 2px 15px 2px 20px;
-    margin-left: 5px;
-    margin-right: 5px;
+    margin-left: 1px;
+    margin-right: 1px;
 
 }
 

@@ -48,6 +48,14 @@ help(hqt)
 See [hqt_example.py](https://github.com/paulwinex/hqt/blob/master/hqt_example.py) for details.
 
 ---------------
+#### New in 1.3
+
+  - Support Houdini 15
+
+  - Some stylesheet fix
+
+  - Update help in show function
+
 
 #### Compare Houdini default stylesheet and hqt stylesheet
 
