@@ -19,9 +19,9 @@ This script enables you to use PySide or PyQt4 with Houdini. Main differences fr
     - dialog: opens the window blocks Houdinis window. To do this you need to create a widget that inherits from QDialog. showUi returns result of the dialogue (bool) and a pointer to the dialogue object.
     - menu: If the widget is inherited from QMenu, the menu will open at the current cursor position . showUi returns a pointer to the selected QAction
         
-### Houdini 14
+### Houdini 14 and 15
         
-This script help you to open PySide Widgets in Houdini 14
+This script help you to open PySide Widgets in Houdini 14 and 15 as PythonPanel
  
   - Open widget as child of main Houdini Window
   - Insert your widget as Houdini Python Panel without .pypanel file
