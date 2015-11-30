@@ -29,7 +29,7 @@ This script help you to open PySide Widgets in Houdini 14 and 15 as PythonPanel
         
 ### Install:
 
-  - Install PySide or PyQt4 to default Python library or to Houdini python library
+  - Install PySide or PyQt4 to default Python library or to Houdini python library (for Houdini 13 only)
 
   - Copy hqt.py to PYTHONPATH or PATH. For example:
 
