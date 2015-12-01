@@ -211,13 +211,17 @@ def setIcon(widget):
 
 def getHouWindow(): # temporary method
     # check Houdini version
-    if hou.applicationVersion()[0] < 15:
-        app = QApplication.instance()
-        for w in app.topLevelWidgets():
-            if w.windowIconText():
-                return w
-    else:
-        return hou.ui.mainQtWindow()
+    if hou.applicationVersion()[0] > 14:
+        try:
+            return hou.ui.mainQtWindow()
+        except:
+            pass
+    app = QApplication.instance()
+    for w in app.topLevelWidgets():
+        if w.windowIconText():
+            return w
+
+
 
 houWindow = getHouWindow()
 
