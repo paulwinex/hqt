@@ -423,17 +423,19 @@ def get_h14_style(theme=None):
     else:
         return ''
 
+def getCurrentColorTheme():
+    pref = hou.homeHoudiniDirectory()
+    uipref = os.path.join(pref, 'ui.pref')
+    if os.path.exists(uipref):
+        with open(uipref) as f:
+            for l in f.readlines():
+                if l.startswith('colors.scheme'):
+                    theme = re.findall('\"(.*)\"', l)[0]
+                    return theme
+
 def getThemeColors(theme=None):
     if not theme:
-        pref = hou.homeHoudiniDirectory()
-        uipref = os.path.join(pref, 'ui.pref')
-        if os.path.exists(uipref ):
-            with open(uipref) as f:
-                for l in f.readlines():
-                    if l.startswith('colors.scheme'):
-                        theme = re.findall('\"(.*)\"', l)[0]
-                        break
-
+        theme = getCurrentColorTheme()
     conf = os.path.join(hou.getenv('HFS'), 'houdini', 'config')
     if os.path.exists(conf):
         for uif in glob.glob1(conf, "*.hcs"):
