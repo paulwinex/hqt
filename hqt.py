@@ -44,15 +44,26 @@ if ver[0] <= 13:
             from PyQt4.QtGui import *
             qt = 2
         except:
-            raise Exception('Error load PyQt or PySide')
+            try:
+                from PySide2.QtCore import *
+                from PySide2.QtGui import *
+                from PySide2.QtWidgets import *
+                qt = 3
+            except:
+                raise Exception('Error load PyQt or PySide')
     import inspect
 
 else:
     # we use Houdini 14 or higher
     QT = True
     import tempfile
-    from PySide.QtCore import *
-    from PySide.QtGui import *
+    try:
+        from PySide.QtCore import *
+        from PySide.QtGui import *
+    except:
+        from PySide2.QtCore import *
+        from PySide2.QtGui import *
+        from PySide2.QtWidgets import *
     qt = 1
 
 
